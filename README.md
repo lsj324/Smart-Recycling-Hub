@@ -31,8 +31,9 @@
 **실행영상**
 
 
-https://github.com/lsj324/Smart-Recycling-Hub/assets/170494075/2c76a452-5c55-4d71-9379-20533ba5de01
+https://github.com/lsj324/Smart-Recycling-Hub/assets/170494075/36751cf1-edeb-4e64-b373-4fcdd611eebe
 
 
-https://github.com/lsj324/Smart-Recycling-Hub/assets/170494075/2c76a452-5c55-4d71-9379-20533ba5de01
+
+https://github.com/lsj324/Smart-Recycling-Hub/assets/170494075/cf4b3a35-9581-4cc9-b703-e1c1dc42e061
 
