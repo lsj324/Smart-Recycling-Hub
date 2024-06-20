@@ -1,5 +1,6 @@
 
-![KakaoTalk_20240611_141846867](https://github.com/lsj324/Smart-Recycling-Hub/assets/170494075/fb048019-25d1-4634-b64c-2455c788e908)
+![제목 없음](https://github.com/lsj324/Smart-Recycling-Hub/assets/170494075/59c10c64-0643-4650-ae04-9df25f12dd2d)
+
 
 **목표**
 
