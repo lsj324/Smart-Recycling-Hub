@@ -1,0 +1,17 @@
+<launch>
+    <!-- Node 1 -->
+    <node name="node_home" pkg="ros_server_client" type="node_1.py" output="screen" />
+
+    <!-- Node 2 -->
+    <node name="node_trash" pkg="ros_server_client" type="node_2.py" output="screen" />
+
+    <!-- Node 3 -->
+    <node name="node_CU" pkg="ros_server_client" type="node_3.py" output="screen" />
+
+    <!-- Node_Back -->
+    <node name="node_back" pkg="ros_server_client" type="node_back.py" output="screen" />
+
+    <!-- Node_teleop -->
+    <node name="node_teleop" pkg="ros_server_client" type="node_teleop.py" output="screen" />
+</launch>
+

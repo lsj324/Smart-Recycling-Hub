@@ -1,0 +1,14 @@
+<launch>
+    <!-- Run RViz -->
+    <node pkg="rviz" type="rviz" name="rviz" args="-d $(find myagv_navigation)/rviz/teb.rviz"/>
+
+    <!-- map path -->
+    <arg name="map_file" default="$(find myagv_navigation)/map/test_map.yaml"/>
+
+    <!-- Run map_server node-->
+    <node name="map_server_for_test" pkg="map_server" type="map_server" args="$(arg map_file)" output="screen">
+        <param name="frame_id" value="map"/>
+    </node>
+
+</launch>
+
