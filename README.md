@@ -19,6 +19,7 @@
 **해결**
 
 - AGV와 노트북을 ROS통신으로 연결하여 노트북에서 SLAM을, AGV에선 QR detection을 돌리는 방식으로 카메라 딜레이를 해결
+![MyAGV + VBOX](https://github.com/lsj324/Smart-Recycling-Hub/assets/170494075/2449f6cb-cff9-4c95-975c-1444aa87d596)
 
 **성과**
 
