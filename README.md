@@ -1,5 +1,5 @@
 
-![제목 없음](https://github.com/lsj324/Smart-Recycling-Hub/assets/170494075/59c10c64-0643-4650-ae04-9df25f12dd2d)
+![제목 없음](https://github.com/lsj324/Smart-Recycling-Hub/assets/170494075/3c78f63c-3ad9-4068-959f-d24e8e7553af)
 
 
 **목표**
