@@ -1,8 +1,5 @@
-# QR 코드를 인식해서 AGV를 좌우 조정 후 전진 시키는 함수
-
 import cv2
 import numpy as np
-from pyzbar.pyzbar import decode
 import threading
 import time
 import rospy
@@ -13,6 +10,7 @@ from std_msgs.msg import String, Int32
 # agv = MyAgv("/dev/ttyAMA2", 115200)
 prevcommand = None
 front_back = False
+angle_move = False
 action = None
 is_quit = False
 no_qr_count = 0  # QR 코드가 감지되지 않은 프레임의 카운트
@@ -25,10 +23,11 @@ def send_stop():
 
 # QR 코드 디코딩 함수
 def qr_decode(frame):
-    global prevcommand, front_back, no_qr_count
-    decoded = decode(frame)
+    global prevcommand, front_back, angle_move, no_qr_count
+    qr_detector = cv2.QRCodeDetector()
+    retval, points = qr_detector.detect(frame)
 
-    if len(decoded) == 0:
+    if not retval:
         no_qr_count += 1
         print(no_qr_count)
         if no_qr_count > 30:  # QR 코드가 30프레임 동안 감지되지 않으면 완료 처리
@@ -37,35 +36,55 @@ def qr_decode(frame):
             return "complete"
     else:
         no_qr_count = 0
+        points = points[0]
+        
+        # QR 코드 모서리 좌표 계산
+        top_left = tuple(points[0])
+        top_right = tuple(points[1])
+        bottom_right = tuple(points[2])
+        bottom_left = tuple(points[3])
+        
+        # 왼쪽과 오른쪽 수직선의 길이 계산
+        left_length = np.linalg.norm(np.array(bottom_left) - np.array(top_left))
+        right_length = np.linalg.norm(np.array(bottom_right) - np.array(top_right))
 
-    for d in decoded:
-        x, y, w, h = d.rect  # QR 코드의 좌표와 크기
-
-        # QR 코드의 중심 x, y 좌표를 계산
+        # QR 코드의 중심 x 좌표를 계산
         center_line_x = frame.shape[1] // 2
-        cx = (x * 2 + w) // 2
+        cx = int((top_left[0] + top_right[0]) // 2)
 
-        if not front_back:
-            if cx < center_line_x - 20:
-                prevcommand = "left"
-                # print("left")
-                return "left"
-            elif cx > center_line_x + 20:
-                prevcommand = "right"
-                # print("right")
-                return "right"
-            elif cx > center_line_x - 20 and cx < center_line_x + 20:
-                front_back = True
-                prevcommand = "right"
-                # agv.stop()
+        if not angle_move:
+            if abs(left_length - right_length) > 20:
+                if left_length > right_length:
+                    prevcommand = "rotate_left"
+                    return "rotate_left"
+                else:
+                    prevcommand = "rotate_right"
+                    return "rotate_right"
+            else:
+                angle_move = True
                 send_stop()
-                # print("stop")
                 return "stop"
         else:
-            prevcommand = "forward"
-            # print("go_ahead")
-            return "forward"
-
+            if not front_back:
+                if cx < center_line_x - 20:
+                    prevcommand = "left"
+                    # print("left")
+                    return "left"
+                elif cx > center_line_x + 20:
+                    prevcommand = "right"
+                    # print("right")
+                    return "right"
+                elif cx > center_line_x - 20 and cx < center_line_x + 20:
+                    front_back = True
+                    # agv.stop()
+                    send_stop()
+                    # print("stop")
+                    return "stop"
+            else:
+                prevcommand = "forward"
+                # print("go_ahead")
+                return "forward"
+            
     return None
 
 # 카메라 함수
@@ -113,7 +132,19 @@ def agv_thread():
 
 # AGV 이동 함수
 def move_agv(action):
-    if action == "right":
+    if action == "rotate_right":
+        # agv.pan_right1(1)
+        print("AGV rotating right")
+        msg = String()
+        msg.data = 'o'
+        pub_teleop.publish(msg)
+    elif action == "rotate_left":
+        # agv.pan_left1(1)
+        print("AGV rotating left")
+        msg = String()
+        msg.data = 'u'
+        pub_teleop.publish(msg)
+    elif action == "right":
         # agv.pan_right1(1)
         print("AGV moving right")
         msg = String()
@@ -137,7 +168,6 @@ def move_agv(action):
         msg = String()
         msg.data = '_'
         pub_teleop.publish(msg)        
-
 
 def QR():
     global is_quit
